@@ -77,11 +77,11 @@ class DBStorage:
             Return: → Number of classes that have the name cls.
                     → If cls == None, returns the count of all objects.
         """
-        count_classes = 0
         if cls:
             objects_in_class = self.all(cls)
             return (len(objects_in_class))
         else:
+            count_classes = 0
             for current_class in classes:
                 clss = self.all()
                 count_classes += len(clss)
