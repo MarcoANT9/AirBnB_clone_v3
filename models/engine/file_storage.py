@@ -40,6 +40,30 @@ class FileStorage:
             key = obj.__class__.__name__ + "." + obj.id
             self.__objects[key] = obj
 
+    def get(self, cls, id):
+        """ Gets an object of a class given its id.
+            cls → Class.
+            id  → Object Id.
+            Return:  → The object which id matches in the class.
+                     → None if the item is not found.
+        """
+        if cls and id:
+            if type(cls) == str:
+                cls = eval(cls)
+            key  = cls.__name__ + '.' + id
+            object_list = self.all()
+            if key in object_list:
+                return object_list[key]
+            return None
+
+    def count(self, cls=None):
+        """ Counts all objects in storage that match the ginven class name.
+            cls → Classname to search.
+            Return: → Number of classes that have the name cls.
+                    → If cls == None, returns the count of all objects.
+        """
+        return len(self.all(cls))
+
     def save(self):
         """serializes __objects to the JSON file (path: __file_path)"""
         json_objects = {}
