@@ -55,6 +55,38 @@ class DBStorage:
         """add the object to the current database session"""
         self.__session.add(obj)
 
+    def get(self, cls, id):
+        """ Gets an object of a class given its id.
+            cls → Class.
+            id  → Object Id.
+            Return:  → The object which id matches in the class.
+                     → None if the item is not found.
+        """
+        if cls and id:
+            if type(cls) is str:
+                cls = eval(cls)
+            object_list = self.__session.query(cls).all()
+            for obj_get in object_list:
+                if obj_get.id == id:
+                    return obj_get
+        return None
+
+    def count(self, cls=None):
+        """ Counts all objects in storage that match the ginven class name.
+            cls → Classname to search.
+            Return: → Number of classes that have the name cls.
+                    → If cls == None, returns the count of all objects.
+        """
+        if cls:
+            objects_in_class = self.all(cls)
+            return (len(objects_in_class))
+        else:
+            count_classes = 0
+            for current_class in classes:
+                clss = self.all()
+                count_classes += len(clss)
+        return count_classes
+
     def save(self):
         """commit all changes of the current database session"""
         self.__session.commit()
