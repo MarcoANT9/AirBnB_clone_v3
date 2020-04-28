@@ -50,7 +50,7 @@ class FileStorage:
         if cls and id:
             if type(cls) == str:
                 cls = eval(cls)
-            key  = cls.__name__ + '.' + id
+            key = cls.__name__ + '.' + id
             object_list = self.all()
             if key in object_list:
                 return object_list[key]
