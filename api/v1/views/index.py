@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-""" """
+"""Index page for flask that displays status and stats"""
 from api.v1.views import app_views
 from flask import jsonify
 from models import storage
