@@ -28,7 +28,7 @@ def get_one_state(state_id):
 
 
 @app_views.route("/states/<state_id>", methods=['DELETE'],
-                 strict_slashes=False))
+                 strict_slashes=False)
 def delete_an_state(state_id):
     """ This function retrieves one state given an id and
         deletes it.
