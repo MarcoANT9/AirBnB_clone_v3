@@ -66,6 +66,7 @@ def create_place(city_id):
         abort(404)
 
     pla = Place(**new_place)
+    setattr(pla, "city_id", city_id)
     storage.new(pla)
     storage.save()
     return make_response(jsonify(pla.to_dict()), 201)
