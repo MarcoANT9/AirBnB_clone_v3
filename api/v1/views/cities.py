@@ -55,7 +55,7 @@ def delete_a_city(city_id):
 
 @app_views.route("/states/<state_id>/cities", methods=['POST'],
                  strict_slashes=False)
-def create_state(state_id):
+def create_city(state_id):
     """ This function creates a new city.
         state_id → state in which the new city will be created.
     """
@@ -76,7 +76,7 @@ def create_state(state_id):
 
 
 @app_views.route("/cities/<city_id>", methods=['PUT'], strict_slashes=False)
-def update_state(state_id):
+def update_city(state_id):
     """ This function updates a city. """
     city_update = request.get_json()
     if not city_update:
