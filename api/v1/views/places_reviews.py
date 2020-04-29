@@ -11,7 +11,7 @@ from models.place import Place
                  strict_slashes=False)
 def get_all_reviews_in_place(place_id):
     """ This function retrieves all the reviews in a place given a place id
-        place_id → Id of the requested state.
+        place_id → Id of the requested place.
     """
     all_reviews = []
     place = storage.get("Place", place_id)
@@ -25,23 +25,19 @@ def get_all_reviews_in_place(place_id):
 
 
 @app_views.route("/reviews/<review_id>", methods=['GET'], strict_slashes=False)
-def get_a_review(review_id):
+def get_id_review(review_id):
     """ Retrieves a review given an id.
         review_id → Id of the requested review.
     """
     review_dict = storage.get(Review, review_id)
     if review_dict is None:
         abort(404)
-    """    if review_dict is not None:
-        all_reviews = storage.all(Review).values()
-        for review in all_reviews:
-    if review.id == review_id:"""
     return jsonify(review_dict.to_dict())
 
 
 @app_views.route("/reviews/<review_id>", methods=['DELETE'],
                  strict_slashes=False)
-def delete_a_review(review_d):
+def delete_a_review(review_id):
     """ This function retrieves one review given an id and
         deletes it.
         review_id → Id of review to delete.
@@ -65,26 +61,27 @@ def create_review(place_id):
     new_review = request.get_json()
     if new_review is None:
         abort(400, "Not a JSON")
-    place = storage.get(Place, place_id)
+    if not new_review.get("text"):
+        abort(400, "Missing text")
+    if not new_review.get("user_id"):
+        abort(400, "Missing user_id")
+
+    place = storage.get("Place", place_id)
+    if not storage.get("User", new_review.get("user_id")):
+        abort(404)
+
     if not place:
         abort(404)
-    if 'user_id' not in new_review:
-        abort(400, "Missing user_id")
-    user = storage.get(User, new_review['user_id'])
-    if not user:
-        abort(404)
-    if 'text' not in new_review:
-        abort(400, "Missing text")
-    if new_review:
-        new_review['place_id'] = place_id
+
         review = Review(**new_review)
         storage.new(review)
+        setattr(review, "place_id", place_id)
         storage.save()
         return make_response(jsonify(review.to_dict()), 201)
 
 
 @app_views.route("/reviews/<review_id>", methods=['PUT'], strict_slashes=False)
-def review_city(review_id):
+def update_review(review_id):
     """ This function updates a review given an id.
         review_id → id of the review to update.
     """
