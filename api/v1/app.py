@@ -8,10 +8,9 @@ from flask_cors import CORS
 
 
 app = Flask(__name__)
-CORS(app, resourses={r"/*": {"origins": "0.0.0.0"}})
 app.register_blueprint(app_views)
 app.url_map.strict_slashes = False
-
+CORS(app, resourses={r"/*": {"origins": "0.0.0.0"}})
 
 @app.teardown_appcontext
 def tear_down(self):
