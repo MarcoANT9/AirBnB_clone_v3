@@ -114,6 +114,25 @@ class TestFileStorage(unittest.TestCase):
             js = f.read()
         self.assertEqual(json.loads(string), json.loads(js))
 
+    @unittest.skipIf(models.storage_t == 'db', "not testing db storage")
+    def test_all_counts_of_states(self):
+        """Test that get all counts of states"""
+        one_count = models.storage.count(State)
+        state = State(name="New State")
+        models.storage.new(state)
+        models.storage.save()
+        last_count = models.storage.count(State)
+        self.assertEqual(one_count + 1, last_count)
+
+    @unittest.skipIf(models.storage_t == 'db', "not testing db storage")
+    def test_get_states(self):
+        """Test that get the states"""
+        db_state_first = State(name="California")
+        models.storage.new(db_state_first)
+        models.storage.save()
+        key = models.storage.get(State, db_state_first.id)
+        self.assertEqual(key.id, db_state_first.id)
+
     @unittest.skipIf(models.storage_t == 'db', "not testing file storage")
     def test_get(self):
         """Test the get feature to get one element of a class. """
