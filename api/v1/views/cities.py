@@ -7,37 +7,56 @@ from models.state import State
 from models.city import City
 
 
-@app_views.route("/states/<state_id>/cities", methods=['GET'], strict_slashes=False)
-def get_one_state(state_id):
-    """ This function retrieves one state given an id.
+@app_views.route("/states/<state_id>/cities", methods=['GET'],
+                 strict_slashes=False)
+def get_all_cities_in_state(state_id):
+    """ This function retrieves all the cities in a state one state given an id
         state_id → Id of the requested state.
     """
-    object_dict = storage.get("State", state_id)
-    if object_dict:
-        return jsonify(object_dict.to_dict())
+    all_cities = []
+    state = storage.get("State", state_id)
+    if not state:
+        abort(404)
+    all_object_dict = storage.all(City).values()
+    for value in all_object_dict:
+        if value.state_id == state_id:
+            all_cities.append(value.to_dict())
+    return jsonify(all_cities)
+
+
+@app_views.route("cities/<city_id>", methods=['GET'], strict_slashes=False)
+def get_a_city(city_id):
+    """ Retrieves a city given an id.
+        city_id → Id of the requested city.
+    """
+    all_cities = storage.all(City).values()
+    for value in all_cities:
+        if value.id == city_id:
+            return jsonify(value.to_dict())
     abort(404)
 
 
-@app_views.route("/states/<state_id>", methods=['DELETE'],
+@app_views.route("/cities/<city_id>", methods=['DELETE'],
                  strict_slashes=False)
-def delete_an_state(state_id):
-    """ This function retrieves one state given an id and
+def delete_a_city(city_id):
+    """ This function retrieves one city given an id and
         deletes it.
         state_id → Id of state to delete.
         returns an empty dictionary on success.
         raises a 404 error if state doesn't exists.
     """
-    object_dict = storage.get("State", state_id)
-    if object_dict:
-        object_dict.delete()
+    city_dict = storage.get(City, city_id)
+    print (city_dict)
+    if city_dict:
+        city_dict.delete()
         storage.save()
         return make_response(jsonify({}), 200)
     abort(404)
 
-
+"""
 @app_views.route("/states/", methods=['POST'], strict_slashes=False)
 def create_state():
-    """ This function creates a new state. """
+    "" This function creates a new state. ""
     new_state = request.get_json()
     if not new_state:
         abort(400, "Not a JSON")
@@ -53,7 +72,7 @@ def create_state():
 
 @app_views.route("/states/<state_id>", methods=['PUT'], strict_slashes=False)
 def update_state(state_id):
-    """ This function updates a state. """
+    "" This function updates a state. ""
     state_update = request.get_json()
     if not state_update:
         abort(400, "Not a JSON")
@@ -69,3 +88,4 @@ def update_state(state_id):
             storage.save()
         return make_response(jsonify(object_.to_dict()), 200)
     abort(404)
+"""
