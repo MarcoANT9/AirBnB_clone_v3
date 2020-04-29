@@ -4,7 +4,6 @@ from api.v1.views import app_views
 from flask import jsonify, abort, request, make_response
 from models import storage
 from models.review import Review
-from models.place import Place
 
 
 @app_views.route("/places/<place_id>/reviews", methods=['GET'],
@@ -38,7 +37,7 @@ def delete_a_review(review_id):
         deletes it.
         review_id → Id of review to delete.
         returns an empty dictionary on success.
-        raises a 404 error if state doesn't exists.
+        raises a 404 error if review doesn't exists.
     """
     review_dict = storage.get(Review, review_id)
     if review_dict:
