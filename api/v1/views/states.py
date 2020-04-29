@@ -47,6 +47,7 @@ def delete_an_state(state_id):
         return jsonify({})
     abort(404)
 
+
 @app_views.route("/states/", methods=['POST'])
 def create_state():
     """ This function creates a new state. """
@@ -78,12 +79,8 @@ def update_state(state_id):
             for key in state_update:
                 if key not in ignored_attr:
                     value = state_update[key]
-                    print (object_.__dict__[key])
                     object_.__dict__[key] = value
-                    print (object_.__dict__[key])
 
             object_.save()
-            print(storage.get(State, state_id).to_dict())
-            print(object_.to_dict())
             return jsonify(object_.to_dict())
         abort(404)
