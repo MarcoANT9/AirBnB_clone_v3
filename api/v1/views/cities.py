@@ -46,7 +46,6 @@ def delete_a_city(city_id):
         raises a 404 error if state doesn't exists.
     """
     city_dict = storage.get(City, city_id)
-    print (city_dict)
     if city_dict:
         city_dict.delete()
         storage.save()
