@@ -12,6 +12,7 @@ app.register_blueprint(app_views)
 app.url_map.strict_slashes = False
 cors = CORS(app, resourses={r"/api/*": {"origins": "*"}})
 
+
 @app.teardown_appcontext
 def tear_down(self):
     """Close session"""
