@@ -25,7 +25,7 @@ def get_one_state(state_id):
         state_id → Id of the requested state.
     """
     storage.reload()
-    object_dict = storage.get(State, state_id)
+    object_dict = storage.get("State", state_id)
     if object_dict:
         return jsonify(object_dict.to_dict())
     abort(404)
@@ -58,8 +58,7 @@ def create_state():
     if new_state:
         if "name" not in new_state:
             return jsonify("Missing name"), 400
-        state = State()
-        state.name = new_state['name']
+        state = State(**new_state)
         storage.new(state)
         storage.save()
         return make_response(jsonify(state.to_dict()), 201)
