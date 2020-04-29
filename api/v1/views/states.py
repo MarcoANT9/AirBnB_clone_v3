@@ -6,13 +6,10 @@ from models import storage
 from models.state import State
 
 
-@app_views.route("/states/", methods=['GET'], strict_slashes=False)
+@app_views.route("/states", methods=['GET'], strict_slashes=False)
 def get_all_states():
     """ This function retrieves all states. Has no parameters. """
     states_dict = []
-    """
-    if getenv("HBNB_TYPE_STORAGE") == "db":
-    """
     all_object_dict = storage.all(State).values()
     for value in all_object_dict:
         states_dict.append(value.to_dict())
@@ -24,7 +21,6 @@ def get_one_state(state_id):
     """ This function retrieves one state given an id.
         state_id → Id of the requested state.
     """
-    storage.reload()
     object_dict = storage.get("State", state_id)
     if object_dict:
         return jsonify(object_dict.to_dict())
