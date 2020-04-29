@@ -53,7 +53,7 @@ def create_state():
     try:
         new_state = request.get_json()
     except:
-       return jsonify("Not a JSON"), 400
+        return jsonify("Not a JSON"), 400
 
     if new_state:
         if "name" not in new_state:
