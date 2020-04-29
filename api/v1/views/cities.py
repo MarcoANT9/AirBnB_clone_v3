@@ -52,39 +52,43 @@ def delete_a_city(city_id):
         return make_response(jsonify({}), 200)
     abort(404)
 
-"""
-@app_views.route("/states/", methods=['POST'], strict_slashes=False)
-def create_state():
-    "" This function creates a new state. ""
-    new_state = request.get_json()
-    if not new_state:
-        abort(400, "Not a JSON")
 
+@app_views.route("/states/<state_id>/cities", methods=['POST'],
+                 strict_slashes=False)
+def create_state(state_id):
+    """ This function creates a new city.
+        state_id → state in which the new city will be created.
+    """
+    new_city = request.get_json()
+    if not new_city:
+        abort(400, "Not a JSON")
+    state = storage.get(State, state_id)
+    if not state:
+        abort(404)
     if new_state:
         if "name" not in new_state:
             abort(400, "Missing name")
-        state = State(**new_state)
-        storage.new(state)
+        new_city['state_id'] = state_id
+        city = City(**new_city)
+        storage.new(city)
         storage.save()
-        return make_response(jsonify(state.to_dict()), 201)
+        return make_response(jsonify(city.to_dict()), 201)
 
 
-@app_views.route("/states/<state_id>", methods=['PUT'], strict_slashes=False)
+@app_views.route("/cities/<city_id>", methods=['PUT'], strict_slashes=False)
 def update_state(state_id):
-    "" This function updates a state. ""
-    state_update = request.get_json()
-    if not state_update:
+    """ This function updates a city. """
+    city_update = request.get_json()
+    if not city_update:
         abort(400, "Not a JSON")
 
-    object_ = storage.get(State, state_id)
+    object_ = storage.get(City, city_id)
     if object_:
-        ignored_attr = ["id", "created_at", "updated_at"]
+        ignored_attr = ["id", "created_at", "updated_at", "state_id"]
         for key, value in state_update.items():
             if key not in ignored_attr:
                 setattr(object_, key, value)
-
             object_.save()
             storage.save()
         return make_response(jsonify(object_.to_dict()), 200)
     abort(404)
-"""
