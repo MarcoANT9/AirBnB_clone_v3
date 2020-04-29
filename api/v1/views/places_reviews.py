@@ -13,15 +13,11 @@ def get_all_reviews_in_place(place_id):
     """ This function retrieves all the reviews in a place given a place id
         place_id → Id of the requested place.
     """
-    all_reviews = []
     place = storage.get("Place", place_id)
     if place is None:
         abort(404)
-    all_object_dict = storage.all(Review).values()
-    for value in all_object_dict:
-        if value.place_id == place_id:
-            all_reviews.append(value.to_dict())
-    return jsonify(all_reviews)
+    review_list = [r.to_dict() for r in place.reviews]
+    return jsonify(review_list), 200
 
 
 @app_views.route("/reviews/<review_id>", methods=['GET'], strict_slashes=False)
