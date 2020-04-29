@@ -17,7 +17,7 @@ def get_all_reviews_in_place(place_id):
     if place is None:
         abort(404)
     review_list = [r.to_dict() for r in place.reviews]
-    return jsonify(review_list), 200
+    return jsonify(review_list)
 
 
 @app_views.route("/reviews/<review_id>", methods=['GET'], strict_slashes=False)
@@ -69,11 +69,11 @@ def create_review(place_id):
     if not place:
         abort(404)
 
-        review = Review(**new_review)
-        storage.new(review)
-        setattr(review, "place_id", place_id)
-        storage.save()
-        return make_response(jsonify(review.to_dict()), 201)
+    review = Review(**new_review)
+    storage.new(review)
+    setattr(review, "place_id", place_id)
+    storage.save()
+    return make_response(jsonify(review.to_dict()), 201)
 
 
 @app_views.route("/reviews/<review_id>", methods=['PUT'], strict_slashes=False)
