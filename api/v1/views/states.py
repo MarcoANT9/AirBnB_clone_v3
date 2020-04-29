@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 """Index page for flask that displays status and stats"""
 from api.v1.views import app_views
-from flask import jsonify, abort, request
+from flask import jsonify, abort, request, make_response
 from models import storage
 from models.state import State
 
@@ -43,7 +43,7 @@ def delete_an_state(state_id):
     if object_dict:
         object_dict.delete()
         storage.save()
-        return jsonify({})
+        return make_response(jsonify({}), 200)
     abort(404)
 
 
@@ -62,7 +62,7 @@ def create_state():
         state.name = new_state['name']
         storage.new(state)
         storage.save()
-        return jsonify(state.to_dict()), 201
+        return make_response(jsonify(state.to_dict()), 201)
 
 
 @app_views.route("/states/<state_id>", methods=['PUT'])
@@ -71,7 +71,7 @@ def update_state(state_id):
     try:
         state_update = request.get_json()
     except:
-        return jsonify("Not a JSON"), 400
+        abort(400, "Not a JSON")
 
     if state_update:
         object_ = storage.get(State, state_id)
@@ -83,5 +83,5 @@ def update_state(state_id):
 
             object_.save()
             storage.save()
-            return jsonify(object_.to_dict())
+            return make_response(jsonify(object_.to_dict()), 200)
         abort(404)
