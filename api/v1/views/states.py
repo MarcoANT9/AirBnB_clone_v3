@@ -49,7 +49,7 @@ def create_state():
     """ This function creates a new state. """
     new_state = request.get_json()
     if not new_state:
-        abort (400, "Not a JSON")
+        abort(400, "Not a JSON")
 
     if new_state:
         if "name" not in new_state:
@@ -63,20 +63,18 @@ def create_state():
 @app_views.route("/states/<state_id>", methods=['PUT'], strict_slashes=False)
 def update_state(state_id):
     """ This function updates a state. """
-    try:
-        state_update = request.get_json()
-    except:
+    state_update = request.get_json()
+    if not state_update:
         abort(400, "Not a JSON")
 
-    if state_update:
-        object_ = storage.get(State, state_id)
-        if object_:
-            ignored_attr = ["id", "created_at", "updated_at"]
-            for key, value in state_update.items():
-                if key not in ignored_attr:
-                    setattr(object_, key, value)
+    object_ = storage.get(State, state_id)
+    if object_:
+        ignored_attr = ["id", "created_at", "updated_at"]
+        for key, value in state_update.items():
+            if key not in ignored_attr:
+                setattr(object_, key, value)
 
             object_.save()
             storage.save()
-            return make_response(jsonify(object_.to_dict()), 200)
-        abort(404)
+        return make_response(jsonify(object_.to_dict()), 200)
+    abort(404)
