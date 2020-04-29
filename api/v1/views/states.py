@@ -6,7 +6,7 @@ from models import storage
 from models.state import State
 
 
-@app_views.route("/states/", methods=['GET'])
+@app_views.route("/states/", methods=['GET'], strict_slashes=False)
 def get_all_states():
     """ This function retrieves all states. Has no parameters. """
     states_dict = []
@@ -19,7 +19,7 @@ def get_all_states():
     return jsonify(states_dict)
 
 
-@app_views.route("/states/<state_id>", methods=['GET'])
+@app_views.route("/states/<state_id>", methods=['GET'], strict_slashes=False)
 def get_one_state(state_id):
     """ This function retrieves one state given an id.
         state_id → Id of the requested state.
@@ -47,7 +47,7 @@ def delete_an_state(state_id):
     abort(404)
 
 
-@app_views.route("/states/", methods=['POST'])
+@app_views.route("/states/", methods=['POST'], strict_slashes=False)
 def create_state():
     """ This function creates a new state. """
     try:
@@ -64,7 +64,7 @@ def create_state():
         return make_response(jsonify(state.to_dict()), 201)
 
 
-@app_views.route("/states/<state_id>", methods=['PUT'])
+@app_views.route("/states/<state_id>", methods=['PUT'], strict_slashes=False)
 def update_state(state_id):
     """ This function updates a state. """
     try:
